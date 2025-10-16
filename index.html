@@ -5,28 +5,326 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MagosDex</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 🪄 ESTILOS PANTALLA DE INICIO */
+        #pantalla-inicio {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            /* 🖼️ IMAGEN DE FONDO */
+            background-image: url('https://i.pinimg.com/736x/78/a5/91/78a59167bc09367ca75c37e4f33653f8.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* Overlay oscuro para que se vea el texto */
+            background-color: rgba(0, 0, 0, 0.6);
+            background-blend-mode: darken;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 1s ease;
+        }
+        
+        /* Overlay adicional para mejorar legibilidad */
+        #pantalla-inicio::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(40,30,20,0.6), rgba(0,0,0,0.8));
+            z-index: -1;
+        }
+
+        #pantalla-inicio.ocultar {
+            animation: fadeOut 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        .inicio-logo {
+            font-size: 5rem;
+            color: var(--accent);
+            letter-spacing: 6px;
+            text-shadow: 
+                0 0 30px rgba(201, 163, 58, 0.8),
+                0 0 60px rgba(201, 163, 58, 0.6),
+                0 0 90px rgba(201, 163, 58, 0.4);
+            animation: glow 3s ease-in-out infinite alternate;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 
+                    0 0 20px rgba(201, 163, 58, 0.6),
+                    0 0 40px rgba(201, 163, 58, 0.4);
+            }
+            to {
+                text-shadow: 
+                    0 0 40px rgba(201, 163, 58, 0.9),
+                    0 0 80px rgba(201, 163, 58, 0.7),
+                    0 0 120px rgba(201, 163, 58, 0.5);
+            }
+        }
+
+        .inicio-icono {
+            font-size: 6rem;
+            margin-bottom: 30px;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(201, 163, 58, 0.6));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        .inicio-subtitle {
+            font-size: 1.4rem;
+            color: #d7cfa8;
+            letter-spacing: 3px;
+            margin-bottom: 60px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .inicio-descripcion {
+            max-width: 500px;
+            text-align: center;
+            color: #e6dcc8;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 50px;
+            padding: 0 20px;
+            opacity: 0.85;
+        }
+
+        .btn-entrar {
+            background: linear-gradient(135deg, rgba(201, 163, 58, 0.3), rgba(201, 163, 58, 0.1));
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            font-size: 1.3rem;
+            padding: 18px 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(201,163,58,0.5);
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 0 20px rgba(201, 163, 58, 0.3),
+                inset 0 0 20px rgba(201, 163, 58, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-entrar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(201, 163, 58, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-entrar:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-entrar:hover {
+            background: linear-gradient(135deg, rgba(201, 163, 58, 0.5), rgba(201, 163, 58, 0.2));
+            border-color: #f8e7b2;
+            color: #f8e7b2;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 10px 40px rgba(201, 163, 58, 0.6),
+                inset 0 0 30px rgba(201, 163, 58, 0.2);
+        }
+
+        .btn-entrar:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-entrar span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(201, 163, 58, 0.8);
+            animation: floatParticle 10s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes floatParticle {
+            0% { 
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-100px) translateX(150px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .linea-decorativa {
+            width: 300px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 30px 0;
+            opacity: 0.5;
+        }
+
+        /* Ocultar contenido principal al inicio */
+        body > nav,
+        body > #root {
+            display: none;
+        }
+
+        body.app-iniciada > nav,
+        body.app-iniciada > #root {
+            display: block;
+            animation: aparecer 0.8s ease;
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .inicio-logo {
+                font-size: 3rem;
+            }
+            .inicio-icono {
+                font-size: 4rem;
+            }
+            .inicio-subtitle {
+                font-size: 1rem;
+            }
+            .inicio-descripcion {
+                font-size: 1rem;
+                max-width: 90%;
+            }
+            .btn-entrar {
+                font-size: 1.1rem;
+                padding: 15px 40px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- 🪄 PANTALLA DE INICIO -->
+    <div id="pantalla-inicio">
+        <div class="particles" id="particles"></div>
+        
+        <div class="inicio-icono">📜</div>
+        <h1 class="inicio-logo">MagosDex</h1>
+        <div class="linea-decorativa"></div>
+        <p class="inicio-subtitle">Enciclopedia del Mundo Mágico</p>
+        
+        <p class="inicio-descripcion">
+            Explora el fascinante universo de Harry Potter. 
+            Descubre magos, brujas, criaturas mágicas y los secretos 
+            más profundos del mundo de la hechicería.
+        </p>
+        
+        <button class="btn-entrar" onclick="iniciarApp()">
+            <span>✨ Entrar al Mundo Mágico ✨</span>
+        </button>
+    </div>
+
+    <!-- TU CONTENIDO NORMAL -->
     <nav>
         <button onclick="Home()">Home</button>
-        <button onclick="Informativa()">informativa</button>
+        <button onclick="Informativa()">Informativa</button>
         <button onclick="Favoritos()">Favoritos</button>
     </nav>
     
-
+    <div id="root"></div>
     
-    
+    <!-- TUS SCRIPTS ORIGINALES -->
     <script src="js/capturados.js"></script>
-    
     <script src="js/favoritos.js"></script>
     <script src="js/home.js"></script>
     <script src="js/informativa.js"></script>
-    <script> document.addEventListener("DOMContentLoaded",General)</script>
-
     <script src="js/conexionMagos.js"></script>
     <script src="js/magos.js"></script>
     <script src="js/mago.js"></script>
     <script src="script.js"></script>
     
+    <!-- SCRIPT DE LA PANTALLA DE INICIO -->
+    <script>
+        // Crear partículas mágicas
+        function crearParticulas() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 8 + 8) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Función para iniciar la app
+        function iniciarApp() {
+            const pantallaInicio = document.getElementById('pantalla-inicio');
+            
+            // Ocultar pantalla de inicio con animación
+            pantallaInicio.classList.add('ocultar');
+            
+            setTimeout(() => {
+                pantallaInicio.style.display = 'none';
+                document.body.classList.add('app-iniciada');
+                
+                // Cargar los datos y mostrar Home
+                General();
+            }, 800);
+        }
+
+        // Inicializar partículas cuando cargue la página
+        window.addEventListener('load', () => {
+            crearParticulas();
+        });
+    </script>
 </body>
 </html>
